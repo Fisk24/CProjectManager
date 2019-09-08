@@ -1,0 +1,49 @@
+#! /usr/bin/python3
+
+import os, sys
+
+from lib.projectparser import ProjectParser
+
+from argparse import ArgumentParser
+
+parser = ArgumentParser(sys.argv)
+parser.add_argument("--init", action="store_true", help="Initialize the project directory. Generates basic hello world, makefile, and dirs.")
+
+args = parser.parse_args()
+
+template = """ENTRYPOINT="main.{cpp|c}"
+COMPILER="g++"
+COMPARGS="-std=c++17"
+DEBUGDIR="./debug"
+RELEASEDIR="./release"
+SOURCEDIR="./src"
+"""
+
+class Project():
+    def __init__(self):
+        self.project_data = {}
+        self.project_name = os.path.basename(os.getcwd())
+        
+        if args.init == True:
+            self.initProject()
+
+    def initProject(self):
+        if self._checkDirEmpty() == True:
+            self._writeProjectTemplate()
+            self.project_data = ProjectParser().parseProject()
+            os.mkdir(os.path.abspath(self.project_data["DEBUGDIR"]))
+            os.mkdir(os.path.abspath(self.project_data["RELEASEDIR"]))
+            os.mkdir(os.path.abspath(self.project_data["SOURCEDIR"]))
+        else:
+            print("[FATAL] Directory not empty")
+            sys.exit()
+
+    def _writeProjectTemplate(self):
+        with open("."+self.project_name+".project", 'w') as prjFile:
+            prjFile.write(template)
+
+    def _checkDirEmpty(self): 
+        return (len(os.listdir()) == 0)
+
+if __name__ == "__main__":
+    Project()

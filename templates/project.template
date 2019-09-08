@@ -1,0 +1,6 @@
+ENTRYPOINT="main.{cpp|c}"
+COMPILER="gcc"
+COMPARGS="-std=c++17"
+DEBUGDIR="./debug"
+RELEASEDIR="./release"
+SOURCEDIR="./src"

@@ -1,0 +1,8 @@
+main: {CPP FILES}
+	g++ {CPP FILES} -o {EXECUTABLE_NAME}
+
+main.o: main.cpp
+	g++ -c main.cpp {COMPILER_ARGS}
+
+clean:
+	rm *.o test.out
